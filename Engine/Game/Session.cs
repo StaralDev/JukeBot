@@ -80,7 +80,7 @@ public class Session
   public void CheckProgress()
   {
     Progress old = new(Progress);
-
+ 
     if (ActiveWorld is not null) Progress.Add(RunSplit.Start);
     if (HasAdvancement(AdvancementNether)) Progress.Add(RunSplit.Nether);
     if (HasAdvancement(AdvancementBastion)) Progress.Add(RunSplit.Bastion);

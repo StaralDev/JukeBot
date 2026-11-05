@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("JukeBot")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+66c7861259a2a4dca938642cee408c9277540062")]
 [assembly: System.Reflection.AssemblyProductAttribute("JukeBot")]
 [assembly: System.Reflection.AssemblyTitleAttribute("JukeBot")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
