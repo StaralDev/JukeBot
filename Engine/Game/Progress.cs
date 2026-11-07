@@ -14,24 +14,43 @@ public enum RunSplit: uint
 public class Progress
 {
   public Progress() {}
-  public Progress(Progress from) => Splits = [.. from.Splits];
+  public Progress(Progress from) => Splits = [.. from.GetSplits()];
 
+  private readonly Lock SplitsLock = new();
   private readonly SortedSet<RunSplit> Splits = [];
 
-  public void Clear() => Splits.Clear();
-  public void Add(RunSplit a) => Splits.Add(a);
+  public void Clear()
+  {
+    lock (SplitsLock) Splits.Clear();
+  }
+
+  public void Add(RunSplit a)
+  {
+    lock (SplitsLock) Splits.Add(a);
+  }
   
-  public bool In(RunSplit a) => Splits.Contains(a);
+  public bool In(RunSplit a)
+  {
+    lock (SplitsLock) return Splits.Contains(a);
+  }
 
   #nullable enable
   public RunSplit? Now() 
   {
-    if (Splits.Count == 0) return null;
-    return Splits.Max();
+    lock (SplitsLock)
+    {
+      if (Splits.Count == 0) return null;
+      return Splits.Max();
+    }
   }
   #nullable disable
 
-  public static bool operator==(Progress a, Progress b) => a.Splits.SetEquals(b.Splits);
+  private RunSplit[] GetSplits()
+  {
+    lock (SplitsLock) return [.. Splits];
+  }
+
+  public static bool operator==(Progress a, Progress b) => a.GetSplits().SequenceEqual(b.GetSplits());
   public static bool operator!=(Progress a, Progress b) => !(a==b);
 
   public override bool Equals(object obj)

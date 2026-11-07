@@ -17,11 +17,13 @@ public class Logger
   public static string RegexStartWorld { get; private set; } = @"Attempting event world load at (.*)";
   public static string RegexPlayerLogin { get; private set; } = @"(.*?)\[(.*?)\] logged in with entity id (.*?) at \(.*?\)";
   public static string RegexEndWorld { get; private set; } = @"\[WorldCreator\] stopping '(.*?)' integrated server\.\.\.";
+  public static string RegexStateOutput { get; private set; } = @"StateOutput State: (.*)";
 
   private readonly Regex FromStripLogGeneric = new(RegexStripLogGeneric);
   private readonly Regex FromStartWorld = new(RegexStartWorld);
   private readonly Regex FromPlayerLogin = new(RegexPlayerLogin);
   private readonly Regex FromEndWorld = new(RegexEndWorld);
+  private readonly Regex FromStateOutput = new(RegexStateOutput);
 
   private bool ActiveReading = false;
 
@@ -90,47 +92,16 @@ public class Logger
 
   private void TestLog(string timestamp, string kind, string content)
   {
+    Match stateInfo = FromStateOutput.Match(content);
+    if (stateInfo.Success) Manager.Session.HandleStateOutput(stateInfo.Groups[1].Value);
+
     Match loginInfo = FromPlayerLogin.Match(content);
-    if (loginInfo.Success && loginInfo.Groups[1].Value != Manager.Session.ActivePlayer)
-    {
-      Manager.Session.ActivePlayer = loginInfo.Groups[1].Value;
-      Debug.WriteLine($"Recognized player: '{Manager.Session.ActivePlayer}'");
-    }
+    if (loginInfo.Success) Manager.Session.HandlePlayerLogin(loginInfo.Groups[1].Value);
 
     Match joinInfo = FromStartWorld.Match(content);
-    if (joinInfo.Success)
-    {
-      Manager.Session.PendingWorlds.Enqueue(joinInfo.Groups[1].Value);
-      Debug.WriteLine($"Added world to queue: '{joinInfo.Groups[1].Value}' at position '{Manager.Session.PendingWorlds.Count}'");
-      
-      if (Manager.Session.PendingWorlds.Count == 1)
-      {
-        Debug.WriteLine($"Active world set to '{Manager.Session.ActiveWorld}'");
-        Manager.Session.ChangeWorld();
-      }
-      else 
-        Debug.WriteLine($"New world halted for '{Manager.Session.ActiveWorld}' completion");
-    }
+    if (joinInfo.Success) Manager.Session.HandleWorldStart(joinInfo.Groups[1].Value);
 
     Match leaveInfo = FromEndWorld.Match(content);
-    if (leaveInfo.Success)
-    {
-      string stoppedWorld = leaveInfo.Groups[1].Value;
-      if (Manager.Session.ActiveWorld != stoppedWorld)
-      {
-        Debug.WriteLine($"Ignoring stop for non-active world '{stoppedWorld}'");
-        return;
-      }
-
-      Debug.WriteLine($"Removing active world '{stoppedWorld}'; player disconnect/restart...");
-      Manager.Session.PendingWorlds.Dequeue();
-      if (Manager.Session.PendingWorlds.Count == 0)
-        Debug.WriteLine("World queue is now empty.");
-      else
-        Debug.WriteLine($"Active world is now '{Manager.Session.ActiveWorld}'");
-      
-      Manager.Session.ChangeWorld();
-    }
-    
+    if (leaveInfo.Success) Manager.Session.HandleWorldStop(leaveInfo.Groups[1].Value);
   }
 }

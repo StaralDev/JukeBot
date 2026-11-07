@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Text.Json.Nodes;
 using JukeBot.Data;
+using JukeBot.Engine.Global;
 
 namespace JukeBot.Engine.Game;
 
@@ -16,6 +17,7 @@ public class Session
   public Progress Progress = new();
 
   public Queue<string> PendingWorlds { get; set; } = new();
+  public bool IgnoreNextSingleplayerTitle { get; set; }
   #nullable enable
   public string? ActiveWorld => PendingWorlds.TryPeek(out string? world) ? world : null;
   #nullable disable
@@ -32,6 +34,97 @@ public class Session
     AdvancementProgress.Clear();
 
     CheckProgress();
+  }
+
+  public void ClearSingleplayerWorlds()
+  {
+    Queue<string> rankedWorlds = new(PendingWorlds.Where(Util.IsRankedWorld));
+    PendingWorlds = rankedWorlds;
+    IgnoreNextSingleplayerTitle = false;
+  }
+
+  public void HandleStateOutput(string state)
+  {
+    if (state != "title") return;
+
+    if (!IgnoreNextSingleplayerTitle &&
+        ActiveWorld is string activeWorld && !Util.IsRankedWorld(activeWorld))
+    {
+      Debug.WriteLine($"Removing completed singleplayer world '{activeWorld}'");
+      PendingWorlds.Dequeue();
+      ChangeWorld();
+    }
+    else
+      IgnoreNextSingleplayerTitle = false;
+  }
+
+  public void HandlePlayerLogin(string player)
+  {
+    if (player == ActivePlayer) return;
+
+    ActivePlayer = player;
+    Debug.WriteLine($"Recognized player: '{ActivePlayer}'");
+  }
+
+  public void HandleWorldStart(string startedWorld)
+  {
+    if (Util.IsRankedWorld(startedWorld))
+    {
+      ClearSingleplayerWorlds();
+      PendingWorlds.Enqueue(startedWorld);
+    }
+    else
+    {
+      if (ActiveWorld is string currentWorld && Util.IsRankedWorld(currentWorld))
+      {
+        Debug.WriteLine($"Ignoring singleplayer load while ranked world '{currentWorld}' is active");
+        return;
+      }
+
+      if (ActiveWorld is not null)
+      {
+        if (ActiveWorld == startedWorld)
+        {
+          Debug.WriteLine($"Ignoring duplicate load for active world '{startedWorld}'");
+          return;
+        }
+
+        PendingWorlds.Clear();
+        PendingWorlds.Enqueue(startedWorld);
+        IgnoreNextSingleplayerTitle = true;
+        ChangeWorld();
+      }
+      else
+        PendingWorlds.Enqueue(startedWorld);
+    }
+
+    Debug.WriteLine($"Added world to queue: '{startedWorld}' at position '{PendingWorlds.Count}'");
+
+    if (PendingWorlds.Count == 1)
+    {
+      Debug.WriteLine($"Active world set to '{ActiveWorld}'");
+      ChangeWorld();
+    }
+    else
+      Debug.WriteLine($"New world halted for '{ActiveWorld}' completion");
+  }
+
+  public void HandleWorldStop(string stoppedWorld)
+  {
+    if (ActiveWorld != stoppedWorld)
+    {
+      Debug.WriteLine($"Ignoring stop for non-active world '{stoppedWorld}'");
+      return;
+    }
+
+    Debug.WriteLine($"Removing active world '{stoppedWorld}'; player disconnect/restart...");
+    PendingWorlds.Dequeue();
+    if (PendingWorlds.Count == 0)
+      Debug.WriteLine("World queue is now empty.");
+    else
+      Debug.WriteLine($"Active world is now '{ActiveWorld}'");
+
+    ChangeWorld();
   }
 
   public void UpdateAdvancements()
