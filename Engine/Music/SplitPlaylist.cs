@@ -4,6 +4,17 @@ namespace JukeBot.Engine.Music;
 
 public class SplitPlaylist()
 {
+  public async Task FillAsync(string playlistId)
+  {
+    await foreach (var batch in Manager.Fetcher.Playlists.GetVideoBatchesAsync(playlistId))
+    {
+      foreach (var video in batch.Items)
+      {
+        Videos.Add(video);
+      }
+    }
+  }
+
   public List<PlaylistVideo> Videos = [];
   
   private PlaylistVideo last;

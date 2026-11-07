@@ -2,11 +2,14 @@ using JukeBot.Engine.Game;
 using JukeBot.Engine.Global;
 using JukeBot.Engine.Linkage;
 using JukeBot.Engine.Music;
+using YoutubeExplode;
 
 namespace JukeBot.Engine;
 
 class Manager
 {
+  public static YoutubeClient Fetcher { get; private set; } = new();
+
   public static Config Config { get; private set; } = new();
   public static Logger Logger { get; private set; } = new();
 
