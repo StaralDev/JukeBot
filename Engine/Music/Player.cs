@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using JukeBot.Engine.Music.SongSelector;
 using YoutubeExplode;
 using YoutubeExplode.Common;
 
@@ -13,9 +14,9 @@ class Player
     SplitPlaylist playlist = new();
     await playlist.FillAsync(TEST_PLAYLIST);
 
-    Debug.WriteLine(playlist.ExtractRandom().Title);
-    Debug.WriteLine(playlist.ExtractRandom().Title);
-    Debug.WriteLine(playlist.ExtractRandom().Title);
+    Debug.WriteLine(playlist.Extract().Title);
+    Debug.WriteLine(playlist.Extract().Title);
+    Debug.WriteLine(playlist.Extract().Title);
 
     /*
     // var n = await Fetcher.Videos.GetAsync(TEST_SONG);

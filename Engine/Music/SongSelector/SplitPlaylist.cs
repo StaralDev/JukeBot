@@ -1,8 +1,10 @@
+using JukeBot.Engine.Music.SongSelector;
 using YoutubeExplode.Playlists;
+using YoutubeExplode.Videos;
 
-namespace JukeBot.Engine.Music;
+namespace JukeBot.Engine.Music.SongSelector;
 
-public class SplitPlaylist()
+public class SplitPlaylist(): ISongSelector
 {
   public async Task FillAsync(string playlistId)
   {
@@ -21,7 +23,7 @@ public class SplitPlaylist()
   private readonly Random rand = new();
   private const int MAX_RETRY_COUNT = 100;
 
-  public PlaylistVideo ExtractRandom()
+  public IVideo Extract()
   {
     bool found = false;
     int retryc = 0;
