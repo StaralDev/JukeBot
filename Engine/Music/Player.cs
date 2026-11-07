@@ -1,7 +1,9 @@
-using System.Diagnostics;
 using JukeBot.Engine.Music.SongSelector;
-using YoutubeExplode;
-using YoutubeExplode.Common;
+using NAudio.Wave;
+using YoutubeExplode.Channels;
+using YoutubeExplode.Playlists;
+using YoutubeExplode.Videos;
+using YoutubeExplode.Videos.Streams;
 
 namespace JukeBot.Engine.Music;
 
@@ -9,14 +11,59 @@ class Player
 {
   private const string TEST_PLAYLIST = "https://youtube.com/playlist?list=PLNHlsqvHbaoGweLQDycbD_7mwyw_v87Yi&si=eJIdgw-bNxrtJ_3f";
 
+  private MemoryStream AudioStream;
+  private MediaFoundationReader AudioStreamReader;
+  private WaveOut CurrentAudio;
+  private IVideo CurrentVideo;
+  private Channel CurrentChannel;
+
+  public async Task PlayFromPlaylist()
+  {
+    
+  }
+
+  public async Task PlayFromVideo()
+  {
+    
+  }
+
   public async Task test()
   {
+    if (AudioStreamReader is not null)
+    {
+      AudioStream.Dispose();
+      AudioStreamReader.Dispose();
+      CurrentAudio.Dispose();
+    }
+
     SplitPlaylist playlist = new();
     await playlist.FillAsync(TEST_PLAYLIST);
+    
+    CurrentVideo = playlist.Extract();
+    CurrentChannel = await Manager.Fetcher.Channels.GetAsync(CurrentVideo.Author.ChannelId);
+    
+    StreamManifest manifestContent = await Manager.Fetcher.Videos.Streams.GetManifestAsync(CurrentVideo.Url);
+    IStreamInfo strInfo = manifestContent.GetAudioOnlyStreams().GetWithHighestBitrate();
+    var audioRaw = await Manager.Fetcher.Videos.Streams.GetAsync(strInfo);
+    
+    AudioStream = new();
+    await audioRaw.CopyToAsync(AudioStream);
+    AudioStream.Position = 0;
 
-    Debug.WriteLine(playlist.Extract().Title);
-    Debug.WriteLine(playlist.Extract().Title);
-    Debug.WriteLine(playlist.Extract().Title);
+    AudioStreamReader = new(strInfo.Url);
+    CurrentAudio = new();
+
+    CurrentAudio.Init(AudioStreamReader);
+    CurrentAudio.Play();
+    CurrentAudio.Volume = 0.3f;
+
+    Manager.WidgetLink.UpdateSongPresentation.Invoke(new SongPresentationInfo()
+    {
+      Title = CurrentVideo.Title,
+      Artist = CurrentChannel.Title,
+      Cover = CurrentChannel.Thumbnails[0].Url,
+      Background = Background.HashBackground(Game.RunSplit.Start, CurrentChannel.Url),
+    });
 
     /*
     // var n = await Fetcher.Videos.GetAsync(TEST_SONG);
