@@ -50,6 +50,7 @@ partial class DisplayFrame
         this.BackColor = System.Drawing.Color.Black;
         this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
         this.MaximizeBox = false;
+        this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
         this.ResumeLayout(false);
         this.PerformLayout();
     }
