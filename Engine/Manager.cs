@@ -11,24 +11,27 @@ class Manager
   public static Logger Logger { get; private set; } = new();
 
   public static Session Session { get; private set; } = new();
-  public static FrontEnd FrontEnd { get; private set; }
+  public static Player Player { get; private set; } = new();
 
-  public static async Task Start(FrontEnd frontEnd)
+  public static WidgetLink WidgetLink { get; private set; }
+  public static MenuLink MenuLink { get; private set; }
+
+  public static async Task StartMenu(MenuLink menuLink)
   {
-    FrontEnd = frontEnd;
-    await frontEnd.Ready;
+    MenuLink = menuLink;
+    // TODO: Setup like StartWidget
+  }
+
+  public static async Task StartWidget(WidgetLink widgetLink)
+  {
+    WidgetLink = widgetLink;
+    await widgetLink.Ready;
 
     Config.Root = @"C:\Users\Alynna\AppData\Roaming\PrismLauncher\instances\MCSRRanked-Windows-1.16.1-Basic\minecraft";
     //Config.Root = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)+"\\.minecraft";
     Logger.WatchLogs(Config.Root);
 
-    // TODO: Temp
-    frontEnd.UpdateSongPresentation.Invoke(new SongPresentationInfo()
-    {
-      Title = "Test Song111..",
-      Artist = "Test Artist",
-      Cover = @"",
-      Background = Background.HashBackground(RunSplit.End, "Test Song111..")
-    });
+    // FIXME:
+    _ = Player.test();
   }
 }

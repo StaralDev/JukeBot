@@ -189,7 +189,7 @@ body {
   border-radius: 8px;
   overflow: hidden;
 
-  background: url('../../Resources/Debug/Screenshot.png') center / cover no-repeat;
+  background: url('https://appassets.local/Resources/Debug/Screenshot.png') center / cover no-repeat;
 }
 
 .song-image::after {

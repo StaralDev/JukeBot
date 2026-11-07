@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -15,11 +15,13 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebView.WindowsForms" Version="10.0.*" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.*" />
+    <PackageReference Include="NAudio" Version="3.3.0" />
+    <PackageReference Include="YoutubeExplode" Version="6.6.3" />
   </ItemGroup>
 
   <ItemGroup>
       <None Include="Pages\**\*" CopyToOutputDirectory="PreserveNewest" />
-      <Content Include="Resources\**\*" CopyToOutputDirectory="PreserveNewest" TargetPath="Pages\Root\Resources\%(RecursiveDir)%(Filename)%(Extension)" />
+      <Content Include="Resources\**\*" CopyToOutputDirectory="PreserveNewest" TargetPath="Resources\%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
 
 </Project>

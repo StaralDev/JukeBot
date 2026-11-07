@@ -27,9 +27,9 @@ public class Background
     };
     #nullable disable
 
-    if (selection is null) return @"../../Resources/Default/album.webp";
+    if (selection is null) return "https://appassets.local/Resources/Default/album.webp";
     int i = SimpleHash(name) % selection.Count;
 
-    return $"../../Resources/{kind}/{selection[i]}.png";
+    return $"https://appassets.local/Resources/{kind}/{selection[i]}.png";
   }
 }

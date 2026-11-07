@@ -20,25 +20,32 @@ public partial class DisplayFrame : Form
 
     var services = new ServiceCollection();
     services.AddWindowsFormsBlazorWebView();
-    services.AddSingleton<FrontEnd>();
+    services.AddSingleton<WidgetLink>();
 
     var serviceProvider = services.BuildServiceProvider();
 
     BlazorWebView webView = new()
     {
       Dock = DockStyle.Fill,
-      HostPage = @"Pages\Root\index.html",
+      HostPage = @"Pages\Widget\index.html",
       Services = serviceProvider
     };
 
     webView.BlazorWebViewInitialized += (_, e) =>
     {
+      e.WebView.CoreWebView2.SetVirtualHostNameToFolderMapping(
+        "appassets.local",
+        AppContext.BaseDirectory,
+        Microsoft.Web.WebView2.Core.CoreWebView2HostResourceAccessKind.Allow);
       e.WebView.DefaultBackgroundColor = Color.Transparent;
-      _ = Manager.Start(serviceProvider.GetRequiredService<FrontEnd>());
+      _ = Manager.StartWidget(serviceProvider.GetRequiredService<WidgetLink>());
     };
 
     Controls.Add(webView);
-    webView.RootComponents.Add<IndexRazor>("#app");
+    webView.RootComponents.Add<WidgetControl>("#app");
+
+    // This looks like a mistake but is what disables
+    // interactivity... Idk I can't find any other workaround
     webView.Enabled = false;
   }
 
@@ -50,9 +57,9 @@ public partial class DisplayFrame : Form
     const int radius = 16;
     int diameter = radius * 2;
     Rectangle bounds = ClientRectangle;
-    bounds.Inflate(-1, -1);
-    path.AddArc(bounds.Left, bounds.Top, diameter, diameter, 180, 90);
-    path.AddArc(bounds.Right - diameter, bounds.Top, diameter, diameter, 270, 90);
+    bounds.Inflate(-1, -2);
+    path.AddArc(bounds.Left, bounds.Top+1, diameter, diameter, 180, 90);
+    path.AddArc(bounds.Right - diameter, bounds.Top+1, diameter, diameter, 270, 90);
     path.AddArc(bounds.Right - diameter, bounds.Bottom - diameter, diameter, diameter, 0, 90);
     path.AddArc(bounds.Left, bounds.Bottom - diameter, diameter, diameter, 90, 90);
     path.CloseFigure();

@@ -1,0 +1,45 @@
+@using System.Diagnostics
+@using JukeBot.Engine.Linkage
+@using JukeBot.Engine.Music
+@inject WidgetLink Link
+
+<main class="widget">
+  <div class="scroller" style="--scroller-image: url('@Background')">
+    <div class="song-title-viewport">
+    <p class="song-title">@Title</p>
+    </div>
+    <div class="song-artist-viewport">
+    <p class="song-artist">@Artist</p>
+    </div>
+    <div class="song-image" style="background-image: url('@Cover')"></div>
+    <div class="insider"></div>
+  </div>
+</main>
+
+@code {
+  private string Title = "(No song loaded)";
+  private string Artist = "--";
+  private string Background = "https://appassets.local/Resources/Start/golem.png";
+  private string Cover = "https://appassets.local/Resources/Default/album.webp";
+
+  protected override void OnInitialized()
+  {
+    base.OnInitialized();
+
+    Link.UpdateSongPresentation = SetSongPresentation;
+    Link.MarkReady();
+  }
+
+  private void SetSongPresentation(SongPresentationInfo info)
+  {
+    _ = InvokeAsync(() =>
+    {
+      Title = info.Title;
+      Artist = info.Artist;
+      Cover = info.Cover;
+      Background = info.Background;
+      StateHasChanged();
+    });
+    Debug.WriteLine(Cover);
+  }
+}

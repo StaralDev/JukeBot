@@ -1,6 +1,6 @@
-namespace GlobalNamespace
+namespace JukeBot
 {
-    partial class Settings
+    partial class MenuFrame
     {
         /// <summary>
         /// Required designer variable.
@@ -28,10 +28,12 @@ namespace GlobalNamespace
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MenuFrame));
             this.components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "Settings";
+            this.Text = "JukeBot - Menu";
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
         }
 
         #endregion

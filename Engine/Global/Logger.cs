@@ -7,7 +7,7 @@ namespace JukeBot.Engine.Global;
 
 // Feinberg has a perfect quote representing what I think
 // about this class
-// https://youtu.be/A6MRC-osDfk?si=hOaIfDR8wnDsu3ib
+// https://youtu.be/A6MRC-osDfk?
 public class Logger
 {
   public long CurrentLine { get; private set; } = 0;

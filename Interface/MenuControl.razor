@@ -1,0 +1,61 @@
+@using JukeBot.Engine.Linkage
+@inject MenuLink Link
+
+<main>
+  <div class="topbar">
+    @* TODO: Hover texts for info *@
+    <button class="icon-button-outer"><p class="icon-button"></p></button>
+    <button class="icon-button-outer"><p class="icon-button"></p></button>
+    <button class="icon-button-outer"><p class="icon-button"></p></button>
+  </div>
+
+  <details class="settings-section">
+    <summary class="settings-summary"><span class="settings-span">Configuration</span></summary>
+    <div class="settings-block">
+      <div class="settings-block-label"><div class="settings-label">TEST</div></div>
+      <div class="settings-block-value">TEST2</div>
+    </div>
+    <div class="settings-block">
+      <div class="settings-block-label"><div class="settings-label">TEST</div></div>
+      <div class="settings-block-value">TEST2</div>
+    </div>
+    <div class="settings-block">
+      <div class="settings-block-label"><div class="settings-label">TEST</div></div>
+      <div class="settings-block-value">TEST2</div>
+    </div>
+    @* TODO: Make own class for all not just buttons *@
+    @* <div class="topbar">
+      <button class="choice-box"><p class="choice">hello</p></button>
+      <button class="choice-box"><p class="choice">hello</p></button>
+      <button class="choice-box"><p class="choice">hello</p></button>
+    </div> *@
+  </details>
+
+  <details class="settings-section">
+    <summary class="settings-summary"><span class="settings-span">Music Playlists</span></summary>
+  </details>
+</main>
+
+@code {
+
+}
+
+
+@* 
+TODO:
+[==[ TOPBAR ]==]
+Play/Pause
+Skip
+Repeat (boolean)
+Close Widget
+
+[==[ CONFIG ]==]
+.Minecraft Folder: (Path)
+Exclude From Capture: (boolean) // Info: Makes it so this screen isn't captured by screen recorders
+Animated Backgrounds: (boolean)
+
+[==[ MUSIC ]==]
+Overworld: Enabled (boolean); Mode (Playlist, Silence)
+...
+
+ *@

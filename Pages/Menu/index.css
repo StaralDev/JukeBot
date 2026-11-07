@@ -1,0 +1,191 @@
+* {
+  font: 200 16px/1.2 Helvetica, sans-serif;
+}
+
+html,
+body {
+  box-sizing: border-box;
+  background: transparent;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  overflow: hidden;
+}
+
+#app {
+  background: transparent;
+  height: 100%;
+  flex: 1;
+  min-height: 0;
+}
+
+button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  outline: none;
+}
+
+.topbar {
+  margin-top: 2px;
+  margin-bottom: 16px;
+
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+
+  display: block;
+  width: 100%;
+  padding: 2px;
+  background-color: rgb(233, 233, 233);
+  float: right;
+  text-decoration: none;
+  list-style-type: none;
+  text-align: center;
+
+  outline: 2px solid rgb(218, 218, 218);
+}
+
+.icon-button-outer {
+  display: block;
+  float: right;
+  padding: 4px;
+  background-color: rgb(206, 205, 205);
+  
+  border-radius: 6px;
+  margin: 2px;
+}
+
+.icon-button-outer:hover {
+  background-color: rgb(193, 193, 193);
+}
+
+.icon-button-outer:active {
+  background-color: rgb(213, 213, 213);
+}
+
+.icon-button {
+  background-image: url('https://appassets.local/Resources/Icons/settings.png'); /* TODO: Replace with variable */
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  font-size: 0;
+}
+
+.settings-section {
+  width: 100%;
+  padding: 4px;
+}
+
+.settings-summary {
+  list-style: none;
+  width: 100%;
+  padding: 4px;
+}
+
+.settings-span {
+  width: 100%;
+  background-color: rgb(220, 220, 220);
+  padding: 4px;
+  margin: 4px;
+  border-radius: 12px;
+}
+
+.settings-span::after {
+  content: " ►";
+}
+
+details[open] .settings-span::after {
+  content: " ▼";
+}
+
+.settings-block {
+  display: flex;
+  width: calc(100% - 16px);
+  background-color: rgb(237, 237, 237);
+  height: 24px;
+  margin: 4px;
+
+  float: left;
+
+  text-decoration: none;
+  list-style-type: none;
+  text-align: center;
+  align-items: center;
+
+  outline: 2px solid rgb(230, 230, 230);
+  
+  border-radius: 12px;
+
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.settings-block-label {
+  display: block;
+  flex: 1;
+
+  width: 30%;
+  height: 100%;
+  align-items: center;
+
+  float: left;
+  padding-left: 16px;
+}
+
+.settings-label {
+  position: relative;
+  align-self: center;
+  text-align: left;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.settings-block-value {
+  display: block;
+
+  width: 70%;
+  height: 100%;
+  align-items: center;
+  
+  float: left;
+}
+
+/* TODO: Review if this even works and then make the selection itself */
+/* TODO: Also look up if you can have custom states like .choice:my_event or maybe not idk */
+.choice-box {
+  margin: 2px;
+  padding: 2px;
+  
+  background-color: transparent;
+  float: right;
+
+  border-radius: 6px;
+}
+
+.choice-box:isChosen {
+  background-color: rgb(193, 193, 193);
+}
+
+.choice-box:hover {
+  outline: solid 2px rgb(205, 205, 205);
+}
+
+.choice-box:active {
+  outline: solid 2px rgb(180, 180, 180);
+}
+
+.choice {
+  display: block;
+  
+  float: right;
+  background-color: transparent;
+}

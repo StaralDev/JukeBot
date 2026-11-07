@@ -32,6 +32,9 @@ partial class DisplayFrame
         components = new System.ComponentModel.Container();
         this.SuspendLayout();
         // 
+        // button1
+        // 
+        // 
         // DisplayFrame
         // 
         this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);

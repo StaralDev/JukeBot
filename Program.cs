@@ -8,6 +8,6 @@ static class Program
   static void Main()
   {
     ApplicationConfiguration.Initialize();
-    Application.Run(new DisplayFrame());
+    Application.Run(new MenuFrame());
   }
 }
