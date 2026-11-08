@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Text.Json.Nodes;
 using JukeBot.Data;
 using JukeBot.Engine.Global;
+using JukeBot.Engine.Music;
 
 namespace JukeBot.Engine.Game;
 
@@ -22,6 +23,8 @@ public class Session
   public string? ActiveWorld => PendingWorlds.TryPeek(out string? world) ? world : null;
   #nullable disable
   public string ActivePlayer { get; set; }
+
+  public Queue<Stream> PlaylistNext { get; set; } = new();
 
   private bool Reading = false;
 
@@ -187,6 +190,10 @@ public class Session
 
   public void ProgressChanged()
   {
-    Debug.WriteLine($">>>>>>PLAYER JUST DID SOMETHING: {((Progress.Now() is not null) ? Progress.Now() : "STARTED")}");
+    RunSplit? split = Progress.Now();
+    Debug.WriteLine($">>>>>>PLAYER JUST DID SOMETHING: {(split is not null ? split : "STARTED")}");
+    if (split is null) return;
+
+    Manager.Player.PlayFromSplit((RunSplit)split);
   }
 }

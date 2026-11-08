@@ -33,8 +33,5 @@ class Manager
     Config.Root = @"C:\Users\Alynna\AppData\Roaming\PrismLauncher\instances\MCSRRanked-Windows-1.16.1-Basic\minecraft";
     //Config.Root = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)+"\\.minecraft";
     Logger.WatchLogs(Config.Root);
-
-    // FIXME:
-    _ = Player.test();
   }
 }

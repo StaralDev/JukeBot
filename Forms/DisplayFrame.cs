@@ -44,9 +44,8 @@ public partial class DisplayFrame : Form
     Controls.Add(webView);
     webView.RootComponents.Add<WidgetControl>("#app");
 
-    // This looks like a mistake but is what disables
-    // interactivity... Idk I can't find any other workaround
     webView.Enabled = false;
+    webView.TabStop = false;
   }
 
   protected override void OnResize(EventArgs e)

@@ -25,12 +25,18 @@ public class SplitPlaylist(): ISongSelector
 
   public IVideo Extract()
   {
+    if (Videos.Count == 0)
+    {
+      System.Diagnostics.Debug.WriteLine("Cannot extract a song from an empty playlist.");
+      return null;
+    }
+
     bool found = false;
     int retryc = 0;
 
     while (!found && retryc < MAX_RETRY_COUNT)
     {
-      int i = rand.Next()%Videos.Count;
+      int i = rand.Next(Videos.Count);
       PlaylistVideo r = Videos[i];
       
       if (r != last) { last = r; return r; } 

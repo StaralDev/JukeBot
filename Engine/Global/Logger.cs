@@ -13,6 +13,9 @@ public class Logger
   public long CurrentLine { get; private set; } = 0;
   public long CurrentLength { get; private set; } = 0;
 
+  public bool IgnoreNextCycle { get; set; } = true;
+  private bool ActiveReading = false;
+
   public static string RegexStripLogGeneric { get; private set; } = @"\[(.*?)\] \[(.*?)\]:[ ]*(.*)"; 
   public static string RegexStartWorld { get; private set; } = @"Attempting event world load at (.*)";
   public static string RegexPlayerLogin { get; private set; } = @"(.*?)\[(.*?)\] logged in with entity id (.*?) at \(.*?\)";
@@ -25,14 +28,13 @@ public class Logger
   private readonly Regex FromEndWorld = new(RegexEndWorld);
   private readonly Regex FromStateOutput = new(RegexStateOutput);
 
-  private bool ActiveReading = false;
-
   private System.Threading.Timer LogUpdater;
 
   public void WatchLogs(string path)
   {
     LogUpdater = new(_ => { 
-      UpdateLogs(path); ActiveReading = false; 
+      UpdateLogs(path); 
+      ActiveReading = false; 
       Manager.Session.UpdateAdvancements();
     }, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(100));
   }
@@ -47,6 +49,18 @@ public class Logger
     try
     {
       using FileStream reg = new(path+"\\logs\\latest.log", FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+
+      if (IgnoreNextCycle)
+      {
+        CurrentLine = 0;
+        using StreamReader current = new(reg);
+        while (current.ReadLine() is not null) CurrentLine++;
+
+        CurrentLength = reg.Length;
+        IgnoreNextCycle = false;
+        return;
+      }
+
       if (reg.Length == CurrentLength) return; 
       // Nothing ever happens
 
