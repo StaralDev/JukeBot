@@ -29,6 +29,28 @@ import re
 # Copy this directly from your indexes or you'll end up with a bunch of garbage data
 # By the way idec about big o or whatever this is a quick script
 
+
+def configure_json(dat: str):
+  raw: dict = {}
+  raw['advancements'] = {}
+  datJson = json.loads(dat)
+
+  for k, v in datJson.items():
+    advSearch = re.search(r"advancements\.(.*)\.(.*)\.title", k)
+    if (advSearch):
+      kind = advSearch.group(1)
+      name = advSearch.group(2)
+
+      raw['advancements'][f'minecraft:{kind}/{name}'] = v
+
+    if (k == "language.name"):
+      raw['name'] = v
+
+    if (k == "chat.type.advancement.task"):
+      raw['toast'] = v
+
+  return json.dumps(raw, indent=2)
+
 def main(objs: str, hashes: str, loc: str):
   objdir = pathlib.Path(objs)
   hashf = pathlib.Path(hashes)
@@ -59,7 +81,7 @@ def main(objs: str, hashes: str, loc: str):
 
       langRaw = open(indvfile)
       topath = pathlib.Path(f"{loc}\\{langcode}.json")
-      topath.write_text(langRaw.read())
+      topath.write_text(configure_json(langRaw.read()))
       langRaw.close()
 
 if __name__ == "__main__":
