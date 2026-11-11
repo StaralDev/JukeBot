@@ -21,8 +21,9 @@
 
   <ItemGroup>
       <None Include="Pages\**\*" CopyToOutputDirectory="PreserveNewest" />
-      <Content Include="Resources\**\*" CopyToOutputDirectory="PreserveNewest" TargetPath="Resources\%(RecursiveDir)%(Filename)%(Extension)" />
-      <Content Include="Objects\**\*" CopyToOutputDirectory="PreserveNewest" TargetPath="Objects\%(RecursiveDir)%(Filename)%(Extension)" />
+      <None Remove="Resources\**\*" />
+      <Content Include="Resources\**\*" CopyToOutputDirectory="PreserveNewest" />
+      <Content Update="Objects\**\*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>
